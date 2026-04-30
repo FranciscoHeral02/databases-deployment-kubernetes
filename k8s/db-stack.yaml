@@ -12,7 +12,7 @@ metadata:
   name: db-secrets-sync
   namespace: databases
 spec:
-  tokenSecretRef:
+  tokenSecret:
     name: doppler-token-auth
     namespace: doppler-operator-system # Namespace donde vive tu token de servicio
   managedSecret:

@@ -109,6 +109,8 @@ spec:
           value: "postgres-internal"
         - name: DB_PORT
           value: "5432"
+        - name: LISTEN_PORT
+          value: "6432"  
         - name: DB_USER
           valueFrom:
             secretKeyRef:

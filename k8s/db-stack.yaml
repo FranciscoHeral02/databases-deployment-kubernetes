@@ -129,7 +129,7 @@ spec:
         - name: POOL_MODE
           value: "transaction"
         - name: AUTH_TYPE
-          value: "any"
+          value: "md5"
         ports:
         - containerPort: 6432
 

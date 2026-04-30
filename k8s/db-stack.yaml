@@ -10,15 +10,16 @@ apiVersion: secrets.doppler.com/v1alpha1
 kind: DopplerSecret
 metadata:
   name: db-secrets-sync
-  namespace: databases
+  namespace: doppler-operator-system
 spec:
   tokenSecret:
     name: doppler-token-auth
-    namespace: doppler-operator-system # Namespace donde vive tu token de servicio
+    namespace: doppler-operator-system
   project: mi-dev-stack
   config: dev
   managedSecret:
     name: db-secrets  # Nombre del secreto que generará automáticamente
+    namespace: databases
     type: Opaque
 
 ---

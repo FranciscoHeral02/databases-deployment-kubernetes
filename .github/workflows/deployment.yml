@@ -1,0 +1,30 @@
+name: Kubernetes Deploy
+
+on:
+  push:
+    branches: [ master ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Contexto de Kubernetes
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Desplegar a K3s
+        run: |
+          # Aplicamos el manifiesto unificado
+          kubectl apply -f k8s/db-stack.yaml
+          
+          # Verificamos que el despliegue sea exitoso
+          kubectl rollout status deployment/postgres-db -n databases
+          kubectl rollout status deployment/pgbouncer -n databases
+      - name: Verificar despliegue
+        run: |
+          kubectl get pods -n databases
+          kubectl get svc -n databases

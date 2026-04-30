@@ -6,7 +6,7 @@ metadata:
 
 ---
 # 2. DOPPLER SECRET (Sincronización de credenciales)
-apiVersion: secrets.doppler.com/v1
+apiVersion: secrets.doppler.com/v1alpha1
 kind: DopplerSecret
 metadata:
   name: db-secrets-sync

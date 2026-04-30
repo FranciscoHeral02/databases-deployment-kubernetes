@@ -139,10 +139,10 @@ metadata:
   name: pgbouncer-external
   namespace: databases
 spec:
-  type: LoadBalancer # K3s asignará automáticamente la IP de tu VPS
+  type: ClusterIP
   selector:
     app: pgbouncer
   ports:
     - protocol: TCP
-      port: 6432       # Puerto externo directo
-      targetPort: 6432 # Puerto interno del contenedor
+      port: 6432
+      targetPort: 6432

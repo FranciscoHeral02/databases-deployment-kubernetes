@@ -1,0 +1,45 @@
+apiVersion: secrets.doppler.com/v1alpha1
+kind: DopplerSecret
+metadata:
+  name: traefik-dashboard-sync
+  namespace: doppler-operator-system
+spec:
+  tokenSecret:
+    name: doppler-token-auth
+    namespace: doppler-operator-system
+  project: mi-dev-stack
+  config: dev
+  managedSecret:
+    name: traefik-dashboard-auth
+    namespace: kube-system
+    type: Opaque
+
+---
+
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: dashboard-auth
+  namespace: kube-system
+spec:
+  basicAuth:
+    secret: traefik-dashboard-auth
+
+---
+# 3. La regla de entrada por IP
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: kube-system
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host('${TRAEFIK_DASHBOARD_HOST}') && (PathPrefix('/dashboard') || PathPrefix('/api'))
+      kind: Rule
+      services:
+        - name: api@internal
+          kind: TraefikService
+      middlewares:
+        - name: dashboard-auth

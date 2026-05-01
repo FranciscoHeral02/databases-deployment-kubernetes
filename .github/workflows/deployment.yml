@@ -1,4 +1,4 @@
-name: Deploy base configs
+name: Kubernetes Deploy Manual
 
 on:
   workflow_dispatch:
@@ -17,12 +17,25 @@ on:
         required: true
         default: 'databases'
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - name: Generar Token de la GitHub App
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Checkout del código
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Necesario para traer todas las ramas y poder hacer el merge
+          token: ${{ steps.app-token.outputs.token }} # Usa el token del bot para saltarse el Ruleset
 
       - name: Configurar Contexto de Kubernetes
         uses: azure/k8s-set-context@v3
@@ -34,7 +47,6 @@ jobs:
         run: |
           if [[ "${{ inputs.componente }}" == "all" ]]; then
             echo "🚀 Desplegando TODO el contenido de la carpeta k8s/..."
-            # --recursive aplica todos los .yaml dentro de la carpeta
             kubectl apply -f k8s/ --recursive
           else
             echo "🛠️ Desplegando archivo específico: k8s/${{ inputs.componente }}.yaml"
@@ -42,7 +54,6 @@ jobs:
           fi
           
       - name: Verificar Rollout (Solo para DB)
-        # Se ejecuta si elegiste 'all' o 'db-stack'
         if: contains(inputs.componente, 'db') || inputs.componente == 'all'
         run: |
           echo "Verificando salud de la base de datos..."
@@ -52,4 +63,24 @@ jobs:
       - name: Resumen de recursos
         run: |
           kubectl get pods,svc -n ${{ inputs.namespace }}
-          # Si usas otros namespaces (como para ingress), podrías listarlos aquí también
+
+      - name: Hacer Merge de la Rama Actual a Master
+        # Solo lo ejecutamos si NO estamos parados ya en master
+        if: github.ref_name != 'master'
+        run: |
+          echo "Iniciando merge de la rama actual ($GITHUB_REF_NAME) hacia master"
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@://github.com"
+          
+          git fetch origin
+          
+          # Cambiar a master y actualizarla
+          git checkout master
+          git pull origin master
+          
+          # Hacer merge de la rama que ejecutó el workflow
+          git merge origin/$GITHUB_REF_NAME --no-ff -m "chore: merge de $GITHUB_REF_NAME tras deploy manual exitoso [skip ci]"
+          
+          # Subir cambios (la GitHub App tiene permiso de bypass en el Ruleset)
+          git push origin master

@@ -40,7 +40,7 @@ jobs:
       - name: Aplicar Recursos
         run: |
           echo "🚀 Aplicando la capa: ${{ inputs.capa }}/"
-          kubectl apply -f ${{ inputs.capa }}/ --recursive
+          kubectl apply -f k8s/${{ inputs.capa }}/ --recursive
 
       - name: Mantener Master Actualizada
         if: github.ref_name != 'master'

@@ -1,0 +1,11 @@
+name: 02 - Desplegar Red y Seguridad
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-network:
+    uses: ./.github/workflows/caller-deploy.yml
+    with:
+      capa: '02-red-y-seguridad'
+    secrets: inherit

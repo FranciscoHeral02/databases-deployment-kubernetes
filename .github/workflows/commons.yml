@@ -1,0 +1,54 @@
+name: Motor de Despliegue
+
+on:
+  workflow_call:
+    inputs:
+      capa:
+        required: true
+        type: string
+    secrets:
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
+        required: true
+      KUBE_CONFIG:
+        required: true
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generar Token de la GitHub App
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
+      - name: Checkout del código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+          token: ${{ steps.app-token.outputs.token }} 
+
+      - name: Configurar Contexto de Kubernetes
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Aplicar Recursos
+        run: |
+          echo "🚀 Aplicando la capa: ${{ inputs.capa }}/"
+          kubectl apply -f ${{ inputs.capa }}/ --recursive
+
+      - name: Mantener Master Actualizada
+        if: github.ref_name != 'master'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin
+          git checkout master
+          git pull origin master
+          git merge origin/$GITHUB_REF_NAME --no-ff -m "chore: merge de $GITHUB_REF_NAME tras deploy [skip ci]"
+          git push origin master

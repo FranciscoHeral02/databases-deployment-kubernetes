@@ -1,0 +1,28 @@
+name: 03 - Desplegar Bases de Datos
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-databases:
+    uses: ./.github/workflows/caller-deploy.yml
+    with:
+      capa: '03-bases-de-datos'
+    secrets: inherit
+
+  # AQUÍ ESTÁ EL RECURSO ESPECÍFICO DE RESPONSABILIDAD ÚNICA
+  check-health:
+    needs: run-databases # Espera a que termine el despliegue
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configurar Contexto de Kubernetes
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Verificar Salud de la Base de Datos
+        run: |
+          echo "Verificando salud específica de postgres y pgbouncer..."
+          kubectl rollout status deployment/postgres-db -n databases --timeout=60s
+          kubectl rollout status deployment/pgbouncer -n databases --timeout=60s

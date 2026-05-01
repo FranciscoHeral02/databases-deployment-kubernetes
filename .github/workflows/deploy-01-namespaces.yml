@@ -1,0 +1,11 @@
+name: 01 - Desplegar Namespaces
+
+on:
+  workflow_dispatch: # Se ejecuta manualmente
+
+jobs:
+  run-namespaces:
+    uses: ./.github/workflows/caller-deploy.yml
+    with:
+      capa: '01-namespaces'
+    secrets: inherit # Pasa los secretos automáticamente

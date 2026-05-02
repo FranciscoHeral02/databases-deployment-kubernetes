@@ -19,7 +19,7 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host('${fheral-dev.duckdns.org}') && (PathPrefix('/dashboard') || PathPrefix('/api'))
+    - match: Host(`fheral-dev.duckdns.org`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       services:
         - name: api@internal

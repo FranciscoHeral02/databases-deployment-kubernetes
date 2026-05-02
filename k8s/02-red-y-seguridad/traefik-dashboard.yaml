@@ -9,7 +9,6 @@ spec:
     namespace: doppler-operator-system
   project: mi-dev-stack
   config: dev
-  omitMeta: true
   managedSecret:
     name: traefik-dashboard-auth
     namespace: kube-system

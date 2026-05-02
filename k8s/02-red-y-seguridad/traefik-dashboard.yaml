@@ -6,7 +6,8 @@ metadata:
 spec:
   basicAuth:
     secret: traefik-dashboard-auth
-
+    secretKeys:
+      - .htpasswd
 ---
 
 apiVersion: traefik.io/v1alpha1

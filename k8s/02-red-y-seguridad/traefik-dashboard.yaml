@@ -17,11 +17,14 @@ metadata:
 spec:
   entryPoints:
     - web
+    - websecure
   routes:
-    - match: Host('${TRAEFIK_DASHBOARD_HOST}') && (PathPrefix('/dashboard') || PathPrefix('/api'))
+    - match: Host('${fheral-dev.duckdns.org}') && (PathPrefix('/dashboard') || PathPrefix('/api'))
       kind: Rule
       services:
         - name: api@internal
           kind: TraefikService
       middlewares:
         - name: dashboard-auth
+ tls:
+    certResolver: myresolver

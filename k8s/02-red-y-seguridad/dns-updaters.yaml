@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: duckdns-updater
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: duckdns
+  template:
+    metadata:
+      labels:
+        app: duckdns
+    spec:
+      containers:
+      - name: updater
+        image: osixia/duckdns:latest
+        env:
+          - name: SUBDOMAINS
+            valueFrom:
+              secretKeyRef:
+                name: duckdns-credentials
+                key: DUCKDNS_SUBDOMAINS
+          - name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: duckdns-credentials
+                key: DUCKDNS_TOKEN
+

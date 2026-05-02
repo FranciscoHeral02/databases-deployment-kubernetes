@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: updater
-        image: osixia/duckdns:latest
+        image: lscr.io/linuxserver/duckdns:latest
         env:
           - name: SUBDOMAINS
             valueFrom:

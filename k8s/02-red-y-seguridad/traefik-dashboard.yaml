@@ -26,5 +26,5 @@ spec:
           kind: TraefikService
       middlewares:
         - name: dashboard-auth
- tls:
+  tls:
     certResolver: myresolver

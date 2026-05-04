@@ -4,7 +4,7 @@ metadata:
   name: letsencrypt-prod
 spec:
   acme:
-    server: https://letsencrypt.org
+    server: https://acme-v02.api.letsencrypt.org/directory
     email: francisco.heral02@gmail.com
     privateKeySecretRef:
       name: letsencrypt-prod

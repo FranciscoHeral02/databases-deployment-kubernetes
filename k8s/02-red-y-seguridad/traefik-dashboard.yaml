@@ -25,5 +25,5 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-      middlewares:
-        - name: dashboard-auth
+      #middlewares:
+      #  - name: dashboard-auth

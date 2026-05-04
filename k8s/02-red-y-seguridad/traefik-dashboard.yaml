@@ -16,7 +16,6 @@ metadata:
   namespace: kube-system
 spec:
   entryPoints:
-    - web
     - websecure
   routes:
     - match: Host(`fheral-dev.duckdns.org`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
@@ -26,3 +25,7 @@ spec:
           kind: TraefikService
       #middlewares:
       #  - name: dashboard-auth
+  tls:
+    certResolver: letsencrypt-prod
+    domains:
+      - main: fheral-dev.duckdns.org

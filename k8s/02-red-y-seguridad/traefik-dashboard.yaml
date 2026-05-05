@@ -12,9 +12,5 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-      #middlewares:
-      #  - name: dashboard-auth
   tls:
-    certResolver: letsencrypt-prod
-    domains:
-      - main: fheral-dev.duckdns.org
+    secretName: traefik-dashboard-tls

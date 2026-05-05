@@ -12,6 +12,3 @@ spec:
         protocol: TCP
     additionalArguments:
       - "--entrypoints.postgres.address=:6432/tcp"
-      - "--certificatesresolvers.letsencrypt-prod.acme.email=francisco.heral02@gmail.com"
-      - "--certificatesresolvers.letsencrypt-prod.acme.storage=/data/acme.json"
-      - "--certificatesresolvers.letsencrypt-prod.acme.httpchallenge.entrypoint=web"

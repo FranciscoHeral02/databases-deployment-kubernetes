@@ -5,13 +5,11 @@ metadata:
   namespace: databases
 spec:
   entryPoints:
-    - postgres  # Debes asegurarte que Traefik tenga este puerto abierto
+    - postgres
   routes:
-  - match: HostSNI(`fheral-dev.duckdns.org`)
+  - match: HostSNI(`db.devfheral.dev`)
     services:
     - name: pgbouncer-external
       port: 6432
   tls:
-    certResolver: letsencrypt-prod # El nombre del ClusterIssuer
-    domains:
-    - main: fheral-dev.duckdns.org
+    secretName: wildcard-tls

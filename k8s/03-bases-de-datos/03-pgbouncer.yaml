@@ -33,11 +33,8 @@ spec:
             secretKeyRef:
               name: db-secrets
               key: POSTGRES_PASSWORD
-        - name: DB_NAME
-          valueFrom:
-            secretKeyRef:
-              name: db-secrets
-              key: POSTGRES_DB
+        - name: DB_NAMES
+          value: "*"
         - name: POOL_MODE
           value: "transaction"
         - name: AUTH_TYPE

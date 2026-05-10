@@ -10,10 +10,6 @@ spec:
   resources:
     requests:
       storage: 2Gi
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: cache
 
 ---
 apiVersion: apps/v1
